@@ -23,12 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body
-        className={`antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+      <div className="mx-auto max-w-screen-lg h-screen flex flex-col">
+          <Navbar />
+          <div className="flex-grow">{children}</div>
+      </div>
       </body>
-    </html>
+      </html>
   );
 }
