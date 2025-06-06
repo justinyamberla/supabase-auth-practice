@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
 
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | undefined>(undefined);
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
 

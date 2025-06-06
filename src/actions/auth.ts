@@ -68,7 +68,7 @@ export async function signIn(formData: FormData) {
     if (!existingUser) {
         const { error: insertError } = await supabase.from("user_profiles").insert({
             email: data?.user?.email,
-            username: data?.user?.user_metadata?.username || "",
+            username: data?.user?.user_metadata?.username,
         });
 
         if (insertError) {
@@ -90,4 +90,21 @@ export async function signOut() {
 
     revalidatePath("/", "layout");
     redirect("/login");
+}
+
+export async function signInWithGithub() {
+    const origin = (await headers()).get("origin");
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+        options: {
+            redirectTo: `${origin}/auth/callback`,
+        },
+    });
+
+    if (error) {
+        redirect("/error");
+    } else if (data.url) {
+        redirect(data.url);
+    }
 }
