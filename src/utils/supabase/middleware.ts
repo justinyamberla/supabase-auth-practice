@@ -40,7 +40,7 @@ export async function updateSession(request: NextRequest) {
     if (
         !user &&
         !request.nextUrl.pathname.includes('/login') &&
-        !request.nextUrl.pathname.includes('/auth') &&
+        !request.nextUrl.pathname.includes('/register') &&
         !request.nextUrl.pathname.includes('/forgot-password') &&
         !request.nextUrl.pathname.includes('/reset-password') &&
         !request.nextUrl.pathname.startsWith('/auth')
