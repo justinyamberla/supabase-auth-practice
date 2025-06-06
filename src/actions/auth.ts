@@ -108,3 +108,40 @@ export async function signInWithGithub() {
         redirect(data.url);
     }
 }
+
+export async function forgotPassword(formData: FormData) {
+    const origin = (await headers()).get("origin");
+    const supabase = await createClient();
+
+    const email = formData.get("email") as string;
+
+    const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${origin}/reset-password`,
+    });
+
+    if (error) {
+        return { status: error?.message, user: null };
+    }
+
+    return { status: "success" };
+}
+
+export async function resetPassword(formData: FormData, code: string) {
+    const supabase = await createClient();
+    const password = formData.get("password") as string;
+    const { error: codeError } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (codeError) {
+        return { status: codeError?.message };
+    }
+
+    const { error } = await supabase.auth.updateUser({
+       password: password
+    });
+
+    if (error) {
+        return { status: error?.message };
+    }
+
+    return { status: "success" };
+}

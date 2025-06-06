@@ -2,14 +2,26 @@
 
 import React, { useState } from "react";
 import AuthButton from "./AuthButton";
+import {forgotPassword} from "@/actions/auth";
 
 const ForgotPassword = () => {
-    const [error, setError] = useState<string | null>(null);
+
+    const [error, setError] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         setError(null);
+
+        const formData = new FormData(event.currentTarget);
+        const result = await forgotPassword(formData);
+
+        if (result.status === "success") {
+            alert("Password reset email sent successfully.");
+        } else {
+            setError(result.status);
+        }
 
         setLoading(false);
     };
