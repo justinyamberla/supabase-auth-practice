@@ -5,6 +5,16 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 
+export async function getUserSession() {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+        return null;
+    }
+    return { status: "success", user: data?.session?.user };
+}
+
 export async function signUp(formData: FormData) {
     const supabase = await createClient();
 
@@ -48,7 +58,6 @@ export async function signIn(formData: FormData) {
         return { status: error?.message, user: null };
     }
 
-    //TODO: create a user instance in user_profiles table
     const { data: existingUser } = await supabase
         .from("user_profiles")
         .select("*")
